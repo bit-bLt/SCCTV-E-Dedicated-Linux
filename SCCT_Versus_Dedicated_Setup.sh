@@ -172,7 +172,7 @@ chown -R $SCCT_DEDI_STANDARD_USER:$SCCT_DEDI_STANDARD_USER $SCCT_DEDI_BASE_DIR
 ## Systemd service creation
 # Launches $SCCT_DEDI_START script
 
-service_content_scct_dedi="
+service_content="
 [Unit]
 Description=SCCT Versus Dedicated: @%I
 BindsTo=default.target
@@ -195,7 +195,7 @@ WantedBy=default.target
 "
 
 log 0 "Creating agnostic Systemd service ..."
-echo "$service_content_scct_dedi" > "/etc/systemd/system/${SCCT_DEDI_SERVICE_BASE_NAME}@.service"
+echo "$service_content" > "/etc/systemd/system/${SCCT_DEDI_SERVICE_BASE_NAME}@.service"
 systemctl daemon-reload
 
 # Enable systemd services based on provided profiles (for launch on startup)
