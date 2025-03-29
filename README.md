@@ -6,7 +6,7 @@ This script is currently made in the context of a fresh VPS provisioned with a r
 
 Run SCCT_Versus_Dedicated_Setup.sh and it will configure things from there.
 
-# Configure
+# Configuration
 
 Look to env vars in .env_dedi
 
