@@ -32,7 +32,7 @@ prompt() {
 
 ## Get env vars 
 
-source .scct_env
+source .env_dedi
 
 ## Get server details from user
 
