@@ -30,13 +30,28 @@ if [ $first_char = "@" ]; then
         profile=${profile#?}
 fi
 
-
 query_port=$(echo "$1" | awk -F':' '{print $2}')
 game_port=$(echo "$1" | awk -F':' '{print $3}')
+delay=$(echo "$1" | awk -F':' '{print $4}')
 
-# Hack work around for port change
+
+## Hack work around
+# We modify a single file's port values. We need to wait some time because if we start a bunch
+# of services quickly, they'll all immedietally edit the file, basically making it effectively
+# one port number in the end. The companion setup .sh file currently creates services with a baked
+# in delay argument that can be thought of as service_n * delay_mult.
+# eg, Service 1 = 0 seconds, service 4 = 4 * delay_mult seconds
+
+
+sleep $delay # should be in increments of delay_mult in setup .sh
+
+# Change ports in file to match supplied args
 sed -i "s/\"host_port_query\": [0-9]*,/\"host_port_query\": $game_port,/" SCCT_Versus.config
 sed -i "s/\"host_port_game\": [0-9]*,/\"host_port_game\": $query_port,/" SCCT_Versus.config
+echo $delay > out.file
+
+
+## Start
 
 wine SCCT_Versus.exe -dedicated -hide3d -profile $profile
 

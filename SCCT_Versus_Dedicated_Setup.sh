@@ -203,11 +203,11 @@ systemctl daemon-reload
 log 0 "Creation symlinks to server profiles for Systemd service to run on startup ..."
 
 count=0
+delay_mult=10 # Seconds; Really only needed in current hacky port adjustment with a single file. If framelimit allows -port args, we might be able to nix this
 for profile in "${server_profiles[@]}"; do
         echo $profile
 
-        systemctl enable --now "$SCCT_DEDI_SERVICE_BASE_NAME@$profile:$((SCCT_DEDI_SERVICE_BASE_PORT_QUERY+count)):$((SCCT_DEDI_SERVICE_BASE_PORT_HOST+count))"
-        sleep 10
+        systemctl enable --now "$SCCT_DEDI_SERVICE_BASE_NAME@$profile:$((SCCT_DEDI_SERVICE_BASE_PORT_QUERY+count)):$((SCCT_DEDI_SERVICE_BASE_PORT_HOST+count)):$((delay_mult*count))"
         log 0 "Allowing contextual ports with UFW ..."
         ufw allow $((SCCT_DEDI_SERVICE_BASE_PORT_QUERY+count))
         ufw allow $((SCCT_DEDI_SERVICE_BASE_PORT_HOST+count))
