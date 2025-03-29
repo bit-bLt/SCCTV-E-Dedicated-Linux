@@ -150,8 +150,8 @@ mkdir -p $SCCT_DEDI_WORKING_DIR
 
 ## Acquire SCCT_Enhanced
 
-wget $SCCT_DEDI_DOWNLOAD_URI
-7z x $SCCT_DEDI_PACKAGE $SCCT_DEDI_BASE_DIR
+wget $SCCT_DEDI_GAME_DOWNLOAD_URI
+7z x $SCCT_DEDI_GAME_PACKAGE $SCCT_DEDI_BASE_DIR
 
 ## Copy start script to working dir
 
