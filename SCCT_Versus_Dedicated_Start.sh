@@ -21,9 +21,16 @@ sway-runner swaymsg output HEADLESS-1 mode 1x1
 
 # Get colon delimited args (to be passed by systemd service... or you if you want)
 profile=$(echo "$1" | awk -F':' '{print $1}')
+
+# Systemd args leaves behind @; this checks for leading @ and removes it
+first_char=$(printf %.1s "$profile")
+if [ $first_char = "@" ]; then
+        profile=${profile#?}
+fi
+
+
 query_port=$(echo "$1" | awk -F':' '{print $2}')
 game_port=$(echo "$1" | awk -F':' '{print $3}')
-
 
 # Hack work around for port change
 sed -i "s/\"host_port_query\": [0-9]*,/\"host_port_query\": $game_port,/" SCCT_Versus.config
