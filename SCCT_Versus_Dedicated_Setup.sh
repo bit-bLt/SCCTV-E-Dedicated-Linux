@@ -74,9 +74,9 @@ log 0 "Updating Server Finished"
 
 ## Install Deps
 
-log 0 "Installing deps: $DEPS ..."
+log 0 "Installing deps: $SCCT_DEDI_DEPS ..."
 
-#apt install -y $DEPS
+apt install -y $SCCT_DEDI_DEPS
 
 log 0 "Installing deps Finished"
 
