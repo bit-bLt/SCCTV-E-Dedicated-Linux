@@ -85,7 +85,7 @@ log 0 "Installing deps Finished"
 log 0 "Adding user: $SCCT_DEDI_STANDARD_USER ..."
 
 if [ ! -e "/home/$SCCT_DEDI_STANDARD_USER" ]; then
-        useradd -G $SCCT_DEDI_STANDARD_USER_GROUPS $SCCT_DEDI_STANDARD_USER -m
+        useradd $SCCT_DEDI_STANDARD_USER -m
 
         log 0 "(Limited Permissions User that runs everything dedicated server related)"
         log 0 "Enter password for UNIX $SCCT_DEDI_STANDARD_USER"
