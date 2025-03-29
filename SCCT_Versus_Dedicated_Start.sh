@@ -28,5 +28,6 @@ game_port=$(echo "$1" | awk -F':' '{print $3}')
 # Hack work around for port change
 sed -i "s/\"host_port_query\": [0-9]*,/\"host_port_query\": $game_port,/" SCCT_Versus.config
 sed -i "s/\"host_port_game\": [0-9]*,/\"host_port_game\": $query_port,/" SCCT_Versus.config
+
 wine SCCT_Versus.exe -dedicated -hide3d -profile $profile
 
