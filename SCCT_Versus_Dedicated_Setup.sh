@@ -165,7 +165,10 @@ if [ ! -e $SCCT_DEDI_WORKING_DIR/$SCCT_DEDI_START ]; then
         return 1
 fi
 
+sed -i "s/UseSound=True/UseSound=False/" "$SCCT_DEDI_WORKING_DIR/Default.ini"
+
 # If provided dedicated functionality URI, download and install it
+
 if [ ! -z $SCCT_DEDI_CORE_URI ]; then
 	wget $SCCT_DEDI_CORE_URI
 	cp "Reloaded.Core.dll" $SCCT_DEDI_WORKING_DIR
