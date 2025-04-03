@@ -150,8 +150,8 @@ mkdir -p $SCCT_DEDI_WORKING_DIR
 
 ## Acquire SCCT_Enhanced
 
-wget $SCCT_DEDI_GAME_DOWNLOAD_URI
-7z x $SCCT_DEDI_GAME_PACKAGE $SCCT_DEDI_BASE_DIR
+wget $SCCT_GAME_DOWNLOAD_URI
+7z x $SCCT_GAME_PACKAGE $SCCT_DEDI_BASE_DIR
 
 ## Copy start script to working dir
 
@@ -164,6 +164,12 @@ if [ ! -e $SCCT_DEDI_WORKING_DIR/$SCCT_DEDI_START ]; then
         log 2 "Exiting ..."
         return 1
 fi
+
+# If provided dedicated functionality URI, download and install it
+if [ ! -z $SCCT_DEDI_CORE_URI ]; then
+	wget $SCCT_DEDI_CORE_URI
+	cp "Reloaded.Core.dll" $SCCT_DEDI_WORKING_DIR
+do
 
 ## Ensure proper permissions for standard user in base dir
 
