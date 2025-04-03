@@ -180,7 +180,7 @@ chown -R $SCCT_DEDI_STANDARD_USER:$SCCT_DEDI_STANDARD_USER $SCCT_DEDI_BASE_DIR
 
 service_content="
 [Unit]
-Description=SCCT Versus Dedicated: @%I
+Description=SCCT Versus Dedicated: %I
 BindsTo=default.target
 Wants=default.target
 After=default.target
@@ -189,7 +189,7 @@ After=default.target
 Type=simple
 User=$SCCT_DEDI_STANDARD_USER
 WorkingDirectory=$SCCT_DEDI_WORKING_DIR
-ExecStart=sh $SCCT_DEDI_START @%I
+ExecStart=sh $SCCT_DEDI_START %I
 PAMName=Login
 Environment=WLR_BACKENDS=headless WLR_LIBINPUT_NO_DEVICES=1 WAYLAND_DISPLAY=wayland-1 WLR_RENDERER=pixman WLR_RENDERER_ALLOW_SOFTWARE=1 DISPLAY=:0
 Restart=on-failure
