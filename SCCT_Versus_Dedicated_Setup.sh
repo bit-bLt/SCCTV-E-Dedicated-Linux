@@ -166,13 +166,13 @@ if [ ! -e $SCCT_DEDI_WORKING_DIR/$SCCT_DEDI_START ]; then
         return 1
 fi
 
+# Ensure sound disabled (game likely to crash when system isn't sound capable)
 sed -i "s/UseSound=True/UseSound=False/" "$SCCT_DEDI_WORKING_DIR/Default.ini"
 
-# If provided dedicated functionality URI, download and install it
-
-if [ ! -z $SCCT_DEDI_CORE_URI ]; then
-        wget $SCCT_DEDI_CORE_URI
-        cp "Reloaded.Core.dll" $SCCT_DEDI_WORKING_DIR
+# If provided dedicated package URI, download and install it
+if [ ! -z $SCCT_DEDI_PACKAGE_URI ]; then
+        wget $SCCT_DEDI_PACKAGE_URI
+        7z x $SCCT_DEDI_PACKAGE -o $SCCT_DEDI_WORKING_DIR
 fi
 
 ## Ensure proper permissions for standard user in base dir
@@ -213,7 +213,7 @@ systemctl daemon-reload
 log 0 "Creation symlinks to server profiles for Systemd service to run on startup ..."
 
 count=0
-delay_mult=10 # Seconds; Really only needed in current hacky port adjustment with a single file. If framelimit allows -port args, we might be able to nix this
+delay_mult=10 # Seconds; Really only needed in current hacky port adjustment with a single file. If framelimit allows -port args, can probably nix this
 for profile in "${server_profiles[@]}"; do
         echo $profile
 
