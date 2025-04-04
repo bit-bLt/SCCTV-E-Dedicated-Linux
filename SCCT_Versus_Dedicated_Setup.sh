@@ -85,12 +85,12 @@ log 0 "Installing deps Finished"
 log 0 "Adding user: $SCCT_DEDI_STANDARD_USER ..."
 
 if [ ! -e "/home/$SCCT_DEDI_STANDARD_USER" ]; then
-        useradd $SCCT_DEDI_STANDARD_USER -m
+        useradd "$SCCT_DEDI_STANDARD_USER" -m
 
         log 0 "(Limited Permissions User that runs everything dedicated server related)"
         log 0 "Enter password for UNIX $SCCT_DEDI_STANDARD_USER"
 
-        passwd $SCCT_DEDI_STANDARD_USER
+        passwd "$SCCT_DEDI_STANDARD_USER"
 
 else
         log 1 "User $SCCT_DEDI_STANDARD_USER already exists (home dir found)"
@@ -113,7 +113,7 @@ if [ ! -e "/home/$SCCT_DEDI_MANAGER_USER" ]; then
         printf "(This is the user you should sign in with to manage the server, not root)\n"
         printf "Enter password for UNIX user: $SCCT_DEDI_MANAGER_USER\n"
 
-        passwd $SCCT_DEDI_MANAGER_USER
+        passwd "$SCCT_DEDI_MANAGER_USER"
 else
         log 1 "User $SCCT_DEDI_MANAGER_USER already exists (home dir found)"
 fi
@@ -136,7 +136,7 @@ else
 fi
 
 if [ ! -e "$SCCT_DEDI_WINEPREFIX" ]; then
-        log 2 "Failed to create default wine prefix for $SCCT_DEDI_STANDARD__USER"
+        log 2 "Failed to create default wine prefix for $SCCT_DEDI_STANDARD_USER"
         log 2 "Exiting ..."
         return 1
 fi
@@ -146,12 +146,15 @@ touch "$SCCT_DEDI_WINEPREFIX/drive_c/ProgramData/Ubisoft/Tom Clancy's Splinter C
 
 ## Make dirs
 
-mkdir -p $SCCT_DEDI_WORKING_DIR
+# Remove game data directory if exists (for upgrading or reinstalling)
+rm -rf "$SCCT_DEDI_BASE_DIR/*"
 
 ## Acquire SCCT_Enhanced
 
 wget "$SCCT_GAME_DOWNLOAD_URI"
 7z x "$SCCT_GAME_PACKAGE"
+
+# Move files to base dir
 mv "$SCCT_GAME_FOLDER/"* "$SCCT_DEDI_BASE_DIR/"
 
 ## Copy start script to working dir
@@ -170,9 +173,9 @@ fi
 sed -i "s/UseSound=True/UseSound=False/" "$SCCT_DEDI_WORKING_DIR/Default.ini"
 
 # If provided dedicated package URI, download and install it
-if [ ! -z $SCCT_DEDI_PACKAGE_URI ]; then
-        wget $SCCT_DEDI_PACKAGE_URI
-        7z x $SCCT_DEDI_PACKAGE -o $SCCT_DEDI_WORKING_DIR
+if [ ! -z "$SCCT_DEDI_PACKAGE_URI" ]; then
+        wget "$SCCT_DEDI_PACKAGE_URI"
+        7z x "$SCCT_DEDI_PACKAGE" -o"$SCCT_DEDI_WORKING_DIR"
 fi
 
 ## Ensure proper permissions for standard user in base dir
@@ -210,7 +213,7 @@ systemctl daemon-reload
 
 # Enable systemd services based on provided profiles (for launch on startup)
 
-log 0 "Creation symlinks to server profiles for Systemd service to run on startup ..."
+log 0 "Creating symlinks to server profiles for Systemd service to run on startup ..."
 
 count=0
 delay_mult=10 # Seconds; Really only needed in current hacky port adjustment with a single file. If framelimit allows -port args, can probably nix this
@@ -227,3 +230,12 @@ done
 
 log 0 "Created agnostic Systemd service and profiles"
 
+## Cleanup
+
+log 0 "Cleaning up ..."
+
+rm $SCCT_DEDI_PACKAGE
+rm $SCCT_GAME_PACKAGE
+rm $SCCT_GAME_FOLDER -r
+
+log 0 "Finished Cleaning up"
