@@ -148,8 +148,10 @@ touch "$SCCT_DEDI_WINEPREFIX/drive_c/ProgramData/Ubisoft/Tom Clancy's Splinter C
 
 ## Make dirs
 
+mkdir $SCCT_GAME_BASE_DIR
+
 # Remove game data directory if exists (for upgrading or reinstalling)
-rm -rf "$SCCT_DEDI_BASE_DIR/*"
+rm -rf "$SCCT_GAME_BASE_DIR/*"
 
 ## Acquire SCCT_Enhanced
 
@@ -157,7 +159,7 @@ wget "$SCCT_GAME_DOWNLOAD_URI"
 7z x "$SCCT_GAME_PACKAGE" -y
 
 # Move files to base dir
-mv "$SCCT_GAME_FOLDER/"* "$SCCT_DEDI_BASE_DIR/"
+mv "$SCCT_GAME_FOLDER/"* "$SCCT_GAME_BASE_DIR/"
 
 ## Copy start script to working dir
 
@@ -182,7 +184,7 @@ fi
 
 ## Ensure proper permissions for standard user in base dir
 
-chown -R $SCCT_DEDI_STANDARD_USER:$SCCT_DEDI_STANDARD_USER $SCCT_DEDI_BASE_DIR
+chown -R $SCCT_DEDI_STANDARD_USER:$SCCT_DEDI_STANDARD_USER $SCCT_GAME_BASE_DIR
 
 ## Systemd service creation
 # Launches $SCCT_DEDI_START script
