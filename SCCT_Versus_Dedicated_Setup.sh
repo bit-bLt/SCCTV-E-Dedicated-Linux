@@ -45,7 +45,7 @@ while [ $retry -eq 1 ]; do
 
     printf "\nEnter server names (no spaces!)\n\n"
     for i in $(seq 1 "$instance_count"); do
-   		server_profiles="$server_profiles ($(prompt "Server Profile $i Name"))"
+   		server_profiles="$server_profiles $(prompt "Server Profile $i Name")"
     done
 
     printf "\nProfile Names:\n\n"
