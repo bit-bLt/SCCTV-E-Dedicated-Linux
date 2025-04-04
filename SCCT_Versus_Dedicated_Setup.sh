@@ -24,15 +24,15 @@ log() {
 }
 
 prompt() {
-  read -p "$1 > " response
-  echo "$response"
+	read -p "$1 > " response
+	echo "$response"
 }
 
 ### MAIN
 
 ## Get env vars 
 
-source .env_dedi
+. ./.env_dedi
 
 ## Get server details from user
 
@@ -40,23 +40,25 @@ printf "\n"
 retry=1
 while [ $retry -eq 1 ]; do
 
-        instance_count=$(prompt "Number of server instances")
-        server_profiles=()
+    instance_count=$(prompt "Number of server instances")
+    server_profiles=""
 
-        printf "\nEnter server names (no spaces!)\n\n"
-        for i in $(seq 1 "$instance_count"); do
-                server_profiles+=($(prompt "Server Profile $i Name"))
-        done
+    printf "\nEnter server names (no spaces!)\n\n"
+    for i in $(seq 1 "$instance_count"); do
+   		server_profiles="$server_profiles ($(prompt "Server Profile $i Name"))"
+    done
 
-        printf "\nProfile Names:\n\n"
-        printf "    %s\n" ${server_profiles[@]}
-        printf "\n"
+    printf "\nProfile Names:\n\n"
+	for profile in $server_profiles; do
+       	printf "    %s\n\n" "$profile"
+	done
+    printf "\n"
 
-        result=$(prompt "Look good? (y/n)")
+    result=$(prompt "Look good? (y/n)")
 
-        if [ $result = "y" ]; then
-                retry=0
-        fi
+    if [ $result = "y" ]; then
+        retry=0
+    fi
 done
 
 ## Add i386 repositories
@@ -85,21 +87,21 @@ log 0 "Installing deps Finished"
 log 0 "Adding user: $SCCT_DEDI_STANDARD_USER ..."
 
 if [ ! -e "/home/$SCCT_DEDI_STANDARD_USER" ]; then
-        useradd "$SCCT_DEDI_STANDARD_USER" -m
+    useradd "$SCCT_DEDI_STANDARD_USER" -m
 
-        log 0 "(Limited Permissions User that runs everything dedicated server related)"
-        log 0 "Enter password for UNIX $SCCT_DEDI_STANDARD_USER"
+    log 0 "(Limited Permissions User that runs everything dedicated server related)"
+    log 0 "Enter password for UNIX $SCCT_DEDI_STANDARD_USER"
 
-        passwd "$SCCT_DEDI_STANDARD_USER"
+    passwd "$SCCT_DEDI_STANDARD_USER"
 
 else
-        log 1 "User $SCCT_DEDI_STANDARD_USER already exists (home dir found)"
+    log 1 "User $SCCT_DEDI_STANDARD_USER already exists (home dir found)"
 fi
 
 if [ ! -e "/home/$SCCT_DEDI_STANDARD_USER" ]; then
-        log 2 "Failed to create $SCCT_DEDI_STANDARD_USER (home dir not found)"
-        log 2 "Exiting ..."
-        return 1
+    log 2 "Failed to create $SCCT_DEDI_STANDARD_USER (home dir not found)"
+    log 2 "Exiting ..."
+    return 1
 fi
 
 log 0 "Standard User Provisioned"
@@ -108,20 +110,20 @@ log 0 "Standard User Provisioned"
 
 log 0 "Adding user: $SCCT_DEDI_MANAGER_USER ..."
 if [ ! -e "/home/$SCCT_DEDI_MANAGER_USER" ]; then
-        useradd -m -G $SCCT_DEDI_MANAGER_USER_GROUPS $SCCT_DEDI_MANAGER_USER
+    useradd -m -G $SCCT_DEDI_MANAGER_USER_GROUPS $SCCT_DEDI_MANAGER_USER
 
-        printf "(This is the user you should sign in with to manage the server, not root)\n"
-        printf "Enter password for UNIX user: $SCCT_DEDI_MANAGER_USER\n"
+    printf "(This is the user you should sign in with to manage the server, not root)\n"
+    printf "Enter password for UNIX user: $SCCT_DEDI_MANAGER_USER\n"
 
-        passwd "$SCCT_DEDI_MANAGER_USER"
+    passwd "$SCCT_DEDI_MANAGER_USER"
 else
-        log 1 "User $SCCT_DEDI_MANAGER_USER already exists (home dir found)"
+    log 1 "User $SCCT_DEDI_MANAGER_USER already exists (home dir found)"
 fi
 
 if [ ! -e "/home/$SCCT_DEDI_MANAGER_USER" ]; then
-        log 2 "Failed to create $SCCT_DEDI_MANAGER_USER (home dir not found)"
-        log 2 "Exiting ..."
-        return 1
+    log 2 "Failed to create $SCCT_DEDI_MANAGER_USER (home dir not found)"
+    log 2 "Exiting ..."
+    return 1
 fi
 
 log 0 "Manager User Provisioned"
@@ -130,15 +132,15 @@ log 0 "Manager User Provisioned"
 
 log 0 "Provisioning default wine prefix for $SCCT_DEDI_STANDARD_USER ..."
 if [ -e "$SCCT_DEDI_WINEPREFIX" ]; then
-        log 1 "Default wine prefix for $SCCT_DEDI_STANDARD_USER already exists ..."
+    log 1 "Default wine prefix for $SCCT_DEDI_STANDARD_USER already exists ..."
 else
-        su $SCCT_DEDI_STANDARD_USER -c 'WINEPREFIX='$SCCT_DEDI_WINEPREFIX' wineboot -i'
+    su $SCCT_DEDI_STANDARD_USER -c 'WINEPREFIX='$SCCT_DEDI_WINEPREFIX' wineboot -i'
 fi
 
 if [ ! -e "$SCCT_DEDI_WINEPREFIX" ]; then
-        log 2 "Failed to create default wine prefix for $SCCT_DEDI_STANDARD_USER"
-        log 2 "Exiting ..."
-        return 1
+    log 2 "Failed to create default wine prefix for $SCCT_DEDI_STANDARD_USER"
+    log 2 "Exiting ..."
+    return 1
 fi
 
 # Band-aid bug fix; dedi auto process needs at least one profile to exist
@@ -164,9 +166,9 @@ log 0 "Copying dedi start script to standard user directory ..."
 cp "$SCCT_DEDI_START" "$SCCT_DEDI_WORKING_DIR/$SCCT_DEDI_START"
 
 if [ ! -e $SCCT_DEDI_WORKING_DIR/$SCCT_DEDI_START ]; then
-        log 2 "Could not find start script in standard user directory!"
-        log 2 "Exiting ..."
-        return 1
+    log 2 "Could not find start script in standard user directory!"
+    log 2 "Exiting ..."
+    return 1
 fi
 
 # Ensure sound disabled (game likely to crash when system isn't sound capable)
@@ -174,8 +176,8 @@ sed -i "s/UseSound=True/UseSound=False/" "$SCCT_DEDI_WORKING_DIR/Default.ini"
 
 # If provided dedicated package URI, download and install it
 if [ ! -z "$SCCT_DEDI_PACKAGE_URI" ]; then
-        wget "$SCCT_DEDI_PACKAGE_URI"
-        7z x "$SCCT_DEDI_PACKAGE" -o"$SCCT_DEDI_WORKING_DIR"
+    wget "$SCCT_DEDI_PACKAGE_URI"
+    7z x "$SCCT_DEDI_PACKAGE" -o"$SCCT_DEDI_WORKING_DIR"
 fi
 
 ## Ensure proper permissions for standard user in base dir
@@ -198,7 +200,6 @@ User=$SCCT_DEDI_STANDARD_USER
 WorkingDirectory=$SCCT_DEDI_WORKING_DIR
 ExecStart=sh $SCCT_DEDI_START %I
 PAMName=Login
-Environment=WLR_BACKENDS=headless WLR_LIBINPUT_NO_DEVICES=1 WAYLAND_DISPLAY=wayland-1 WLR_RENDERER=pixman WLR_RENDERER_ALLOW_SOFTWARE=1 DISPLAY=:0
 Restart=on-failure
 RestartSec=1
 TimeoutStopSec=10
@@ -217,15 +218,15 @@ log 0 "Creating symlinks to server profiles for Systemd service to run on startu
 
 count=0
 delay_mult=10 # Seconds; Really only needed in current hacky port adjustment with a single file. If framelimit allows -port args, can probably nix this
-for profile in "${server_profiles[@]}"; do
-        echo $profile
+for profile in $server_profiles; do
+    echo $profile
 
-        systemctl enable --now "$SCCT_DEDI_SERVICE_BASE_NAME@$profile:$((SCCT_DEDI_SERVICE_BASE_PORT_QUERY+count)):$((SCCT_DEDI_SERVICE_BASE_PORT_HOST+count)):$((delay_mult*count))"
-        log 0 "Allowing contextual ports with UFW ..."
-        ufw allow $((SCCT_DEDI_SERVICE_BASE_PORT_QUERY+count))
-        ufw allow $((SCCT_DEDI_SERVICE_BASE_PORT_HOST+count))
+    systemctl enable --now "$SCCT_DEDI_SERVICE_BASE_NAME@$profile:$((SCCT_DEDI_SERVICE_BASE_PORT_QUERY+count)):$((SCCT_DEDI_SERVICE_BASE_PORT_HOST+count)):$((delay_mult*count))"
+    log 0 "Allowing contextual ports with UFW ..."
+    ufw allow $((SCCT_DEDI_SERVICE_BASE_PORT_QUERY+count))
+    ufw allow $((SCCT_DEDI_SERVICE_BASE_PORT_HOST+count))
 
-        count=$((count + 1))
+    count=$((count + 1))
 done
 
 log 0 "Created agnostic Systemd service and profiles"
