@@ -154,7 +154,7 @@ rm -rf "$SCCT_DEDI_BASE_DIR/*"
 ## Acquire SCCT_Enhanced
 
 wget "$SCCT_GAME_DOWNLOAD_URI"
-7z x "$SCCT_GAME_PACKAGE"
+7z x "$SCCT_GAME_PACKAGE" -y
 
 # Move files to base dir
 mv "$SCCT_GAME_FOLDER/"* "$SCCT_DEDI_BASE_DIR/"
@@ -177,7 +177,7 @@ sed -i "s/UseSound=True/UseSound=False/" "$SCCT_DEDI_WORKING_DIR/Default.ini"
 # If provided dedicated package URI, download and install it
 if [ ! -z "$SCCT_DEDI_PACKAGE_URI" ]; then
     wget "$SCCT_DEDI_PACKAGE_URI"
-    7z x "$SCCT_DEDI_PACKAGE" -o"$SCCT_DEDI_WORKING_DIR"
+    7z x "$SCCT_DEDI_PACKAGE" -o"$SCCT_DEDI_WORKING_DIR" -y
 fi
 
 ## Ensure proper permissions for standard user in base dir
@@ -217,7 +217,7 @@ systemctl daemon-reload
 log 0 "Creating symlinks to server profiles for Systemd service to run on startup ..."
 
 count=0
-delay_mult=10 # Seconds; Really only needed in current hacky port adjustment with a single file. If framelimit allows -port args, can probably nix this
+delay_mult=20 # Seconds; Really only needed in current hacky port adjustment with a single file. If framelimit allows -port args, can probably nix this
 for profile in $server_profiles; do
     echo $profile
 
@@ -235,8 +235,11 @@ log 0 "Created agnostic Systemd service and profiles"
 
 log 0 "Cleaning up ..."
 
-rm $SCCT_DEDI_PACKAGE
-rm $SCCT_GAME_PACKAGE
-rm $SCCT_GAME_FOLDER -r
+if [ -e "$SCCT_DEDI_PACKAGE" ]; then
+	rm "$SCCT_DEDI_PACKAGE"
+fi
+
+rm "$SCCT_GAME_PACKAGE"
+rm "$SCCT_GAME_FOLDER" -r
 
 log 0 "Finished Cleaning up"
