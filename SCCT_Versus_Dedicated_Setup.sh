@@ -24,8 +24,8 @@ log() {
 }
 
 prompt() {
-	read -p "$1 > " response
-	echo "$response"
+    read -p "$1 > " response
+    echo "$response"
 }
 
 ### MAIN
@@ -219,7 +219,7 @@ systemctl daemon-reload
 log 0 "Creating symlinks to server profiles for Systemd service to run on startup ..."
 
 count=0
-delay_mult=20 # Seconds; Really only needed in current hacky port adjustment with a single file. If framelimit allows -port args, can probably nix this
+delay_mult=20 # Seconds; Delay each server instance by delay_mult*count
 for profile in $server_profiles; do
     echo $profile
 
