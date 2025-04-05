@@ -253,8 +253,14 @@ rm "$SCCT_GAME_FOLDER" -r
 
 log 0 "Finished Cleaning up"
 
-## Disable root over ssh
+## SSH
+
+# Disable root over ssh
 sed -i "s/PermitRootLogin yes/PermitRootLogin no/" "/etc/ssh/sshd_config"
+
+# Change default port
+sed -i "s/^#*Port 22/Port 28532/" "/etc/ssh/sshd_config"
+
 
 ## Reboot (updates and whatnot)
 
