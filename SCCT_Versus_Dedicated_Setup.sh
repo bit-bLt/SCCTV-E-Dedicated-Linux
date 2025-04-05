@@ -128,7 +128,7 @@ fi
 
 # Copy manager scripts
 cp "$SCCT_DEDI_STATUS" "/home/$SCCT_DEDI_MANAGER_USER/"
-cp "$SCCT_DEDI_MONITOR" "/home/$SCCT_DEDI_MONITOR_USER/"
+cp "$SCCT_DEDI_MONITOR" "/home/$SCCT_DEDI_MANAGER_USER/"
 
 log 0 "Manager User Provisioned"
 
