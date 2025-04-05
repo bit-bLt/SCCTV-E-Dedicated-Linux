@@ -134,7 +134,7 @@ log 0 "Provisioning default wine prefix for $SCCT_DEDI_STANDARD_USER ..."
 if [ -e "$SCCT_DEDI_WINEPREFIX" ]; then
     log 1 "Default wine prefix for $SCCT_DEDI_STANDARD_USER already exists ..."
 else
-    su $SCCT_DEDI_STANDARD_USER -c 'WINEPREFIX='$SCCT_DEDI_WINEPREFIX' wineboot -i'
+    su $SCCT_DEDI_STANDARD_USER -c "WINEPREFIX=\"$SCCT_DEDI_WINEPREFIX\" wineboot -i"
 fi
 
 if [ ! -e "$SCCT_DEDI_WINEPREFIX" ]; then
@@ -144,7 +144,10 @@ if [ ! -e "$SCCT_DEDI_WINEPREFIX" ]; then
 fi
 
 # Band-aid bug fix; dedi auto process needs at least one profile to exist
-touch "$SCCT_DEDI_WINEPREFIX/drive_c/ProgramData/Ubisoft/Tom Clancy's Splinter Cell Chaos Theory/Saved Games/Versus/null_prf.ini"
+scctv_profile_dir="$SCCT_DEDI_WINEPREFIX/drive_c/ProgramData/Ubisoft/Tom Clancy's Splinter Cell Chaos Theory/Saved Games/Versus"
+su "$SCCT_DEDI_STANDARD_USER" -c "mkdir -p \"$scctv_profile_dir\""
+su "$SCCT_DEDI_STANDARD_USER" -c "touch \"$scctv_profile_dir\"/null_prf.ini"
+
 
 ## Make dirs
 
