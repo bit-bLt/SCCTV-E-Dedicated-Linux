@@ -118,6 +118,7 @@ if [ ! -e "/home/$SCCT_DEDI_MANAGER_USER" ]; then
     printf "Enter password for UNIX user: $SCCT_DEDI_MANAGER_USER\n"
 
     passwd "$SCCT_DEDI_MANAGER_USER"
+	chsh $SCCT_DEDI_MANAGER_USER -s "/bin/bash"
 else
     log 1 "User $SCCT_DEDI_MANAGER_USER already exists (home dir found)"
 fi
@@ -282,6 +283,7 @@ echo ""
 log 0 "Finished!"
 
 cp "SCCT_Dedicated_Setup.log" "/home/$SCCT_DEDI_MANAGER_USER/"
+
 if [ $result = "y" ]; then
 	echo "Rebooting in 15 seconds."
 	sleep 15
