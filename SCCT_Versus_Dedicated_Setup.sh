@@ -91,8 +91,8 @@ log 0 "Adding user: $SCCT_DEDI_STANDARD_USER ..."
 if [ ! -e "/home/$SCCT_DEDI_STANDARD_USER" ]; then
     useradd "$SCCT_DEDI_STANDARD_USER" -m
 
-    log 0 "(Limited Permissions User that runs everything dedicated server related)"
-    log 0 "Enter password for UNIX $SCCT_DEDI_STANDARD_USER"
+    printf "(Limited Permissions User that runs everything dedicated server related)\n"
+    printf "Enter password for UNIX $SCCT_DEDI_STANDARD_USER\n"
 
     passwd "$SCCT_DEDI_STANDARD_USER"
 
@@ -273,8 +273,11 @@ rm "$SCCT_GAME_PACKAGE"
 rm "$SCCT_GAME_FOLDER" -r
 
 ## Reboot (updates and whatnot)
-result=$(prompt "Updates may require a reboot. Reboot? (y/n)")
+echo "A reboot is recommended ..."
+result=$(prompt "Reboot now? (y/n)")
 
+echo ""
+echo "IMPORTANT!"
 echo "The new ssh port is: $SCCT_DEDI_SSH_PORT"
 echo "Log in as: $SCCT_DEDI_MANAGER_USER"
 echo "All game related services run under: $SCCT_DEDI_STANDARD_USER"
