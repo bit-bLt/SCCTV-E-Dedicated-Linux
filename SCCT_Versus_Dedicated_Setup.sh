@@ -261,6 +261,12 @@ sed -i "s/PermitRootLogin yes/PermitRootLogin no/" "/etc/ssh/sshd_config"
 log 0 "Changing default ssh port to: $SCCT_DEDI_SSH_PORT ..."
 sed -i "s/^#*Port 22/Port $SCCT_DEDI_SSH_PORT/" "/etc/ssh/sshd_config"
 
+## Disable unattended upgrades
+
+log 0 "Removing unattended-upgrades"
+apt remove unattended-upgrades -y
+
+
 ## Cleanup
 
 log 0 "Cleaning up ..."
