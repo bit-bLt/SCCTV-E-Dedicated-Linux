@@ -34,6 +34,9 @@ prompt() {
 
 . ./.env_dedi
 
+## Kill sway / current running instances if running
+pkill sway
+
 ## Get server details from user
 
 log 0 "Begin ..."
