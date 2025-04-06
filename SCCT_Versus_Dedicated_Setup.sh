@@ -165,7 +165,7 @@ if [ ! -e "$SCCT_GAME_BASE_DIR" ]; then
 else
 	log 0 "Game base directory already exists. Removing data within it."
 	# Remove any game data in  game base dir
-	rm -rf "$SCCT_GAME_BASE_DIR/*"
+	rm -rf "$SCCT_GAME_BASE_DIR/"*
 fi
 
 ## Acquire SCCT_Enhanced
