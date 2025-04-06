@@ -34,7 +34,7 @@ TLDR; the dedicated server instance(s) runs underneath headless Sway and Xwaylan
 - Configures 1x1 virtual display in Sway (this seems to work, and lowers memory footprint)
 - Provides status script to output the window title of the dedicated server cmd window (holds fps and player count stat)
 - Provides monitor script to "watch" the status script
-- Enables ports for each server instance
+- Enables UFW and contextual ports for number of inputs (see .env_dedi for base ports)
 
 # Support
 
