@@ -23,11 +23,12 @@ as root:
 TLDR; the dedicated server instance(s) runs underneath headless Sway and Xwayland.
 
 - Updates server
-- Creates standard user
-- Creates management / sudo user
+- Creates standard user (see .env_dedi)
+- Creates management / sudo user (see .env_dedi)
 - Installs required dependancies (see .env_dedi)
 - Disables Root ssh login
 - Changes default ssh port (see .env_dedi)
+- Downloads the game files (see .env_dedi)
 - Creates systemd services to start server instances on boot
 - Configures 1x1 virtual display in Sway (this seems to work, and lowers memory footprint)
 - Provides status script to output the window title of the dedicated server cmd window (holds fps and player count stat)
