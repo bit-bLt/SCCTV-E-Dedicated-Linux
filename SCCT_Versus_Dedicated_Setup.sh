@@ -63,6 +63,9 @@ while [ $retry -eq 1 ]; do
     fi
 done
 
+echo $server_profiles
+return;
+
 ## Add i386 repositories
 
 log 0 "Adding i386 repositories via dpkg ..."
@@ -208,7 +211,7 @@ chown -R $SCCT_DEDI_STANDARD_USER:$SCCT_DEDI_STANDARD_USER $SCCT_GAME_BASE_DIR
 
 service_content="
 [Unit]
-Description=SCCT Versus Dedicated: %I
+Description=SCCT Versus Dedicated: %i
 BindsTo=default.target
 Wants=default.target
 After=default.target
@@ -217,7 +220,7 @@ After=default.target
 Type=simple
 User=$SCCT_DEDI_STANDARD_USER
 WorkingDirectory=$SCCT_DEDI_WORKING_DIR
-ExecStart=sh $SCCT_DEDI_START %I
+ExecStart=sh $SCCT_DEDI_START %i
 PAMName=Login
 Restart=on-failure
 RestartSec=1
