@@ -17,6 +17,7 @@ as root:
 
 - Choose number of server instances,
 - Choose name of each (whitespace not currently supported)
+- Reboot
 
 # What the script does
 
