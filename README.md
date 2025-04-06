@@ -15,7 +15,7 @@ as root:
 
 ```./SCCT_Versus_Dedicated_Setup.sh```
 
-- Choose number of server instances,
+- Choose number of server instances
 - Choose name of each (whitespace not currently supported)
 - Reboot
 
