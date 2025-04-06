@@ -1,7 +1,7 @@
 
 # Purpose
 
-This script is currently made in the context of a fresh VPS provisioned with a root account.
+This script is currently made in the context of a fresh VPS provisioned with a only root account.
 
 Run SCCT_Versus_Dedicated_Setup.sh and it will configure things from there.
 
@@ -39,3 +39,9 @@ TLDR; the dedicated server instance(s) runs underneath headless Sway and Xwaylan
 # Support
 
 Currently only supports Ubuntu Server 24.04
+
+# Todo
+- [ ] Logging in SCCT_Versus_Dedicated_Start.sh
+- [ ] Run scheduled updates only when no players in lobby
+- [ ] Add better logging checks in SCCT_Versus_Dedicated_Setup.sh
+- [ ] Decompose SCCT_Versus_Dedicated_Setup.sh into functional parts rather than giant main body :)
