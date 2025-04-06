@@ -230,6 +230,13 @@ TimeoutStopSec=10
 WantedBy=default.target
 "
 
+# Remove existing services if found
+if [ -e "/etc/systemd/system/$SCCT_DEDI_SERVICE_BASE_NAME@.service" ]; then
+	log 0 "Removing old existing services ..."
+	systemctl disable "$SCCT_DEDI_SERVICE_BASE_NAME@"
+	rm "/etc/systemd/system/$SCCT_DEDI_SERVICE_BASE_NAME@.service"
+fi
+
 log 0 "Creating agnostic Systemd service ..."
 echo "$service_content" > "/etc/systemd/system/${SCCT_DEDI_SERVICE_BASE_NAME}@.service"
 log 0 "Reloading systemd service daemon ..."
