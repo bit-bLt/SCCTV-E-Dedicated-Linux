@@ -36,6 +36,8 @@ prompt() {
 
 ## Get server details from user
 
+log 0 "Begin ..."
+
 printf "\n"
 retry=1
 while [ $retry -eq 1 ]; do
@@ -126,7 +128,7 @@ if [ ! -e "/home/$SCCT_DEDI_MANAGER_USER" ]; then
     return 1
 fi
 
-# Copy manager scripts
+## Copy manager scripts
 cp "$SCCT_DEDI_STATUS" "/home/$SCCT_DEDI_MANAGER_USER/"
 cp "$SCCT_DEDI_MONITOR" "/home/$SCCT_DEDI_MANAGER_USER/"
 
@@ -148,29 +150,37 @@ if [ ! -e "$SCCT_DEDI_WINEPREFIX" ]; then
 fi
 
 # Band-aid bug fix; dedi auto process needs at least one profile to exist
+log 0 "Creating null_prf.ini to fix automation bug ..."
 scctv_profile_dir="$SCCT_DEDI_WINEPREFIX/drive_c/ProgramData/Ubisoft/Tom Clancy's Splinter Cell Chaos Theory/Saved Games/Versus"
 su "$SCCT_DEDI_STANDARD_USER" -c "mkdir -p \"$scctv_profile_dir\""
 su "$SCCT_DEDI_STANDARD_USER" -c "touch \"$scctv_profile_dir\"/null_prf.ini"
 
 ## Make dirs
 
-mkdir $SCCT_GAME_BASE_DIR
+if [ ! -e "$SCCT_GAME_BASE_DIR" ]; then
+	log 0 "Creating game base directory: $SCCT_GAME_BASE_DIR"
+	mkdir $SCCT_GAME_BASE_DIR
 
-# Remove game data directory if exists (for upgrading or reinstalling)
-rm -rf "$SCCT_GAME_BASE_DIR/*"
+else
+	log 0 "Game base directory already exists. Removing data within it."
+	# Remove any game data in  game base dir
+	rm -rf "$SCCT_GAME_BASE_DIR/*"
+fi
 
 ## Acquire SCCT_Enhanced
-
+log 0 "Downloading game package at: $SCCT_GAME_DOWNLOAD_URI ..."
 wget "$SCCT_GAME_DOWNLOAD_URI"
+log 0 "Extracting .7z package: $SCCT_GAME_PACKAGE ..."
 7z x "$SCCT_GAME_PACKAGE" -y
 
 # Move files to base dir
+
+log 0 "Moving data from extracted folder to game base dir: $SCCT_GAME_BASE_DIR"
 mv "$SCCT_GAME_FOLDER/"* "$SCCT_GAME_BASE_DIR/"
 
 ## Copy start script to working dir
 
 log 0 "Copying dedi start script to standard user directory ..."
-
 cp "$SCCT_DEDI_START" "$SCCT_DEDI_WORKING_DIR/$SCCT_DEDI_START"
 
 if [ ! -e $SCCT_DEDI_WORKING_DIR/$SCCT_DEDI_START ]; then
@@ -218,6 +228,7 @@ WantedBy=default.target
 
 log 0 "Creating agnostic Systemd service ..."
 echo "$service_content" > "/etc/systemd/system/${SCCT_DEDI_SERVICE_BASE_NAME}@.service"
+log 0 "Reloading systemd service daemon ..."
 systemctl daemon-reload
 
 # Enable systemd services based on provided profiles (for launch on startup)
@@ -239,6 +250,15 @@ done
 
 log 0 "Created agnostic Systemd service and profiles"
 
+## SSH
+
+# Disable root over ssh
+log 0 "Disabling root ssh access ..."
+sed -i "s/PermitRootLogin yes/PermitRootLogin no/" "/etc/ssh/sshd_config"
+
+# Change default port
+log 0 "Changing default ssh port to: $SCCT_DEDI_SSH_PORT ..."
+sed -i "s/^#*Port 22/Port $SCCT_DEDI_SSH_PORT/" "/etc/ssh/sshd_config"
 
 ## Cleanup
 
@@ -251,17 +271,20 @@ fi
 rm "$SCCT_GAME_PACKAGE"
 rm "$SCCT_GAME_FOLDER" -r
 
-log 0 "Finished Cleaning up"
-
-## SSH
-
-# Disable root over ssh
-sed -i "s/PermitRootLogin yes/PermitRootLogin no/" "/etc/ssh/sshd_config"
-
-# Change default port
-sed -i "s/^#*Port 22/Port 28532/" "/etc/ssh/sshd_config"
-
-
 ## Reboot (updates and whatnot)
+result=$(prompt "Updates may require a reboot. Reboot? (y/n)")
 
-reboot
+echo "The new ssh port is: $SCCT_DEDI_SSH_PORT"
+echo "Log in as: $SCCT_DEDI_MANAGER_USER"
+echo "All game related services run under: $SCCT_DEDI_STANDARD_USER"
+echo ""	
+
+log 0 "Finished!"
+
+cp "SCCT_Dedicated_Setup.log" "/home/$SCCT_DEDI_MANAGER_USER/"
+if [ $result = "y" ]; then
+	echo "Rebooting in 15 seconds."
+	sleep 15
+	reboot
+fi
+
