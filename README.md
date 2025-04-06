@@ -45,3 +45,5 @@ Currently only supports Ubuntu Server 24.04
 - [ ] Run scheduled updates only when no players in lobby
 - [ ] Add better logging checks in SCCT_Versus_Dedicated_Setup.sh
 - [ ] Decompose SCCT_Versus_Dedicated_Setup.sh into functional parts rather than giant main body :)
+- [ ] Implement way to update script more easilly
+- [ ] Ensure Setup script usable in scct_manager context
