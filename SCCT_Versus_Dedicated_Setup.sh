@@ -63,9 +63,6 @@ while [ $retry -eq 1 ]; do
     fi
 done
 
-echo $server_profiles
-return;
-
 ## Add i386 repositories
 
 log 0 "Adding i386 repositories via dpkg ..."
