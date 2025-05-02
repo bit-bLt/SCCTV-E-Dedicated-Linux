@@ -53,5 +53,5 @@ echo $delay > out.file
 
 ## Start
 
-wine SCCT_Versus.exe -dedicated -hide3d -profile $profile
+wine Dedicated_Server.exe -dedicated -hide3d -profile $profile
 
